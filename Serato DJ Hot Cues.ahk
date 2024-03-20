@@ -3,24 +3,21 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 CoordMode, Mouse, Client
-
-;VARs
-
+;Variables-----------------------------------------------------------------------------------------------------------------------------------
 hotcues := [[140,130],[240,130],[340,130],[440,130],[140,175],[240,175],[340,175],[440,175]]
-colours := [[11,7],[34,7],[55,7]		;[1,2,3]	red,dark orange,orange
-			,[11,21],[34,21],[55,21]	;[4,5,6]	yellow,light green, dark green
-			,[11,35],[34,35],[55,35]	;[7,8,9]	green,dull green,???
-			,[11,49],[34,49],[55,49]	;[10,11,12]	cyan,light blue,dark blue
-			,[11,63],[34,63],[55,63]	;[13,14,15]	blue,dull purple,purple
-			,[11,76],[34,76],[55,76]]	;[16,17,18]	pink,dark pink,light red
+colours := {red:[11,7],			dark_orange:[34,7],		orange:[55,7]
+			,yellow:[11,21],	light_green:[34,21],	dark_green:[55,21]
+			,green:[11,35],		dull_green:[34,35],		greaaeean:[55,35]
+			,cyan:[11,49],		light_blue:[34,49],		dark_blue:[55,49]
+			,blue:[11,63],		dull_purple:[34,63],	purple:[55,63]
+			,pink:[11,76],		dark_pink:[34,76],		pink_red:[55,76]}
 last_accessed := 0
 rec_toggle := True
-
-
+;Auto-execute--------------------------------------------------------------------------------------------------------------------------------
 Run, "C:\Program Files\Serato\Serato DJ Pro\Serato DJ Pro.exe"
 Sleep 5000
 
-Loop
+Loop ;Checks every 3 seconds if Serato process exists. If not, then script exits.
 {
 	Process, Exist, Serato DJ Pro.exe
 	{
@@ -31,112 +28,70 @@ Loop
 	}
 	Sleep 3000
 }
+;Hotkeys-------------------------------------------------------------------------------------------------------------------------------------
 
+;Exit Script
 ^Esc::
-{
 	ExitApp, 0
-}
-
+	return
 
 #IfWinActive ahk_class Qt5QWindowOwnDCIcon
 ;HOT CUES
 1::
-{
 	hotcue_exec(1)
 	return
-}
 2::
-{
 	hotcue_exec(2)
 	return
-}
 3::
-{
 	hotcue_exec(3)
 	return
-}
 4::
-{
 	hotcue_exec(4)
 	return
-}
 5::
-{
 	hotcue_exec(5)
 	return
-}
 6::
-{
 	hotcue_exec(6)
 	return
-}
 7::
-{
 	hotcue_exec(7)
 	return
-}
 8::
-{
 	hotcue_exec(8)
 	return
-}
 
+;Change colour of most recently used hotcue
 y::
-;Dark Green
-{
-	change_colour(6,"y")
+	change_colour("dark_green","y")
 	return
-}
 x::
-;Green
-{
-	change_colour(7,"x")
+	change_colour("green","x")
 	return
-}
 c::
-;Blue
-{
-	change_colour(13,"c")
+	change_colour("blue","c")
 	return
-}
 v::
-;Light Orange
-{
-	change_colour(3,"v")
+	change_colour("orange","v")
 	return
-}
 b::
-;Orange
-{
-	change_colour(2,"b")
+	change_colour("dark_orange","b")
 	return
-}
 n::
-;yellow
-{
-	change_colour(4,"n")
+	change_colour("yellow","n")
 	return
-}
 m::
-;red
-{
-	change_colour(1,"m")
+	change_colour("red","m")
 	return
-}
 ,::
-;Pink
-{
-	change_colour(16,",")
+	change_colour("pink",",")
 	return
-}
 .::
-;Purple
-{
-	change_colour(15,".")
+	change_colour("purple",".")
 	return
-}
 
-;Confirm Deletion
+;Comfirm deletion
 ^del::
 {
 	MsgBox, 4, Warning, Are you sure you want to delete the selected songs/crates?
@@ -147,7 +102,7 @@ m::
 	return
 }
 
-;Toggle prefered recording settings
+;Toggle preferred recording settings
 !r::
 {	
 	FormatTime, CurrentDateTime,, yyyy-MM-dd_HH-mm
@@ -206,7 +161,6 @@ m::
 	return
 }
 
-
 del::
 {
 	Click
@@ -219,36 +173,8 @@ del::
 	return
 }
 
-::br::Breakcore
-::dn::DnB
-::dnb::DnBnB
-::ldnb::Liquid DnB
-::meld::Melodic DnB
-
-::com::Complextro
-
-::clr::Colour Bass
-::dub::Dubstep
-::rid::Riddim
-::ter::Tearout
-::ff::Future Funk
-::gar::Garage
-
-::dish::Disco House
-::fr::French House
-::gh::Ghetto House
-::lof::Lofi House
-::melh::Melodic House
-::ph::Piano House
-::sol::Soulful House
-
-::no::Normie
-::om::Omnigenre
-::Tc::Techno
-::tr::Trance
-
-
-;FUNCTIONS
+;::bpm::BPMCHANGE
+;Functions-----------------------------------------------------------------------------------------------------------------------------------
 hotcue_exec(input)
 {
 	global hotcues
@@ -279,40 +205,3 @@ change_colour(colour,input)
 	SendInput, %input%
 	return
 }
-
-
-AddGenre(genre)
-{
-	Clipboard := ""
-	MouseGetPos, PosX, PosY
-	Click, 800 %PosY% 2
-	Sleep, 100
-	SendInput, ^c
-	ClipWait, 2
-	genreArray := StrSplit(Clipboard, ", ")
-	if(!hasValue(genreArray, genre))
-	{
-		genreArray.Push(genre)
-	}
-	Str := ""
-	For Index, Value In genreArray
-		Str .= ", " . Value
-	Str := LTrim(Str, ", ") ; Remove leading pipes (|)
-	;SendInput, ^a
-	SendInput, %Str%
-	SendInput, {Enter}
-	MouseMove, %PosX%, %PosY%
-	return
-}
-
-hasValue(haystack, needle) {
-    if(!isObject(haystack))
-        return false
-    if(haystack.Length()==0)
-        return false
-    for k,v in haystack
-        if(v==needle)
-            return true
-    return false
-}
-
