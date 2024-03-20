@@ -5,8 +5,15 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 CoordMode, Mouse, Client
 
 ;VARs
-lastX := 0
-lastY := 0
+
+hotcues := [[140,130],[240,130],[340,130],[440,130],[140,175],[240,175],[340,175],[440,175]]
+colours := [[11,7],[34,7],[55,7]		;[1,2,3]	red,dark orange,orange
+			,[11,21],[34,21],[55,21]	;[4,5,6]	yellow,light green, dark green
+			,[11,35],[34,35],[55,35]	;[7,8,9]	green,dull green,???
+			,[11,49],[34,49],[55,49]	;[10,11,12]	cyan,light blue,dark blue
+			,[11,63],[34,63],[55,63]	;[13,14,15]	blue,dull purple,purple
+			,[11,76],[34,76],[55,76]]	;[16,17,18]	pink,dark pink,light red
+last_accessed := 0
 rec_toggle := True
 
 
@@ -35,175 +42,97 @@ Loop
 ;HOT CUES
 1::
 {
-	SendInput, 1
-	lastX := 140
-	lastY := 130
+	hotcue_exec(1)
 	return
 }
 2::
 {
-	SendInput, 2
-	lastX := 240
-	lastY := 130
+	hotcue_exec(2)
 	return
 }
 3::
 {
-	SendInput, 3
-	lastX := 340
-	lastY := 130
+	hotcue_exec(3)
 	return
 }
 4::
 {
-	SendInput, 4
-	lastX := 440
-	lastY := 130
+	hotcue_exec(4)
 	return
 }
 5::
 {
-	SendInput, 5
-	lastX := 140
-	lastY := 175
+	hotcue_exec(5)
 	return
 }
 6::
 {
-	MouseGetPos, PosX, PosY
-	Click, 240 175
-	lastX := 240
-	lastY := 175
-	MouseMove, %PosX%, %PosY%
-	SendInput, 6
+	hotcue_exec(6)
 	return
 }
 7::
 {
-	MouseGetPos, PosX, PosY
-	Click, 340 175
-	lastX := 340
-	lastY := 175
-	MouseMove, %PosX%, %PosY%
-	SendInput, 6
+	hotcue_exec(7)
 	return
 }
 8::
 {
-	MouseGetPos, PosX, PosY
-	Click, 440 175
-	lastX := 440
-	lastY := 175
-	MouseMove, %PosX%, %PosY%
-	SendInput, 6
+	hotcue_exec(8)
 	return
 }
 
 y::
 ;Dark Green
 {
-	MouseGetPos, PosX, PosY
-	newX := lastX + 55
-	newY := lastY + 20
-	Click, %lastX% %lastY% right
-	Click, %newX% %newY%
-	MouseMove, %PosX%, %PosY%
+	change_colour(6,"y")
 	return
 }
 x::
 ;Green
 {
-	MouseGetPos, PosX, PosY
-	newX := lastX + 10
-	newY := lastY + 35
-	Click, %lastX% %lastY% right
-	Click, %newX% %newY%
-	MouseMove, %PosX%, %PosY%
-	SendInput, x
+	change_colour(7,"x")
 	return
 }
 c::
 ;Blue
 {
-	MouseGetPos, PosX, PosY
-	newX := lastX + 10
-	newY := lastY + 65
-	Click, %lastX% %lastY% right
-	Click, %newX% %newY%
-	MouseMove, %PosX%, %PosY%
-	SendInput, c
+	change_colour(13,"c")
 	return
 }
 v::
 ;Light Orange
 {
-	MouseGetPos, PosX, PosY
-	newX := lastX + 55
-	newY := lastY + 10
-	Click, %lastX% %lastY% right
-	Click, %newX% %newY%
-	MouseMove, %PosX%, %PosY%
-	SendInput, v
+	change_colour(3,"v")
 	return
 }
 b::
 ;Orange
 {
-	MouseGetPos, PosX, PosY
-	newX := lastX + 30
-	newY := lastY + 10
-	Click, %lastX% %lastY% right
-	Click, %newX% %newY%
-	MouseMove, %PosX%, %PosY%
-	SendInput, b
+	change_colour(2,"b")
 	return
 }
 n::
 ;yellow
 {
-	MouseGetPos, PosX, PosY
-	newX := lastX + 10
-	newY := lastY + 20
-	Click, %lastX% %lastY% right
-	Click, %newX% %newY%
-	MouseMove, %PosX%, %PosY%
-	SendInput, n
+	change_colour(4,"n")
 	return
 }
 m::
 ;red
 {
-	MouseGetPos, PosX, PosY
-	newX := lastX + 10
-	newY := lastY + 8
-	Click, %lastX% %lastY% right
-	Click, %newX% %newY%
-	MouseMove, %PosX%, %PosY%
-	SendInput, m
+	change_colour(1,"m")
 	return
 }
 ,::
 ;Pink
 {
-	MouseGetPos, PosX, PosY
-	newX := lastX + 10
-	newY := lastY + 80
-	Click, %lastX% %lastY% right
-	Click, %newX% %newY%
-	MouseMove, %PosX%, %PosY%
-	SendInput, ,
+	change_colour(16,",")
 	return
 }
 .::
 ;Purple
 {
-	MouseGetPos, PosX, PosY
-	newX := lastX + 55
-	newY := lastY + 65
-	Click, %lastX% %lastY% right
-	Click, %newX% %newY%
-	MouseMove, %PosX%, %PosY%
-	SendInput, .
+	change_colour(15,".")
 	return
 }
 
@@ -320,6 +249,38 @@ del::
 
 
 ;FUNCTIONS
+hotcue_exec(input)
+{
+	global hotcues
+	global last_accessed
+	SendInput, %input%
+	last_accessed := input
+	MouseGetPos, PosX, PosY
+	X := hotcues[input].1
+	Y := hotcues[input].2
+	Click, %X% %Y%
+	MouseMove, %PosX%, %PosY%
+	return
+}
+
+change_colour(colour,input)
+{
+	global hotcues
+	global last_accessed
+	global colours
+	MouseGetPos, PosX, PosY
+	lastX := hotcues[last_accessed].1
+	lastY := hotcues[last_accessed].2
+	offsetX := lastX + colours[colour].1
+	offsetY := lastY + colours[colour].2
+	Click, %lastX% %lastY% right
+	Click, %offsetX% %offsetY%
+	MouseMove, %PosX%, %PosY%
+	SendInput, %input%
+	return
+}
+
+
 AddGenre(genre)
 {
 	Clipboard := ""
@@ -355,41 +316,3 @@ hasValue(haystack, needle) {
     return false
 }
 
-;GENRE TAGS: Y COORDINATE OF MOUSE HAS TO BE THE SAME AS THE SELECTED SONG
-;Numpad1::
-;{
-;	AddGenre("Bass House")
-;	return
-;}
-;Numpad2::
-;{
-;	AddGenre("Colour House")
-;	return
-;}
-;Numpad3::
-;{
-;	AddGenre("Deep House")
-;	return
-;}
-;Numpad4::
-;{
-;	AddGenre("Future House")
-;	return
-;}
-;Numpad5::
-;{
-;	AddGenre("Tech House")
-;	return
-;}
-;Numpad6::
-;{
-;	AddGenre("Tech Core")
-;	return
-;}
-;
-;ins::
-;{
-;	Click
-;	AddGenre("BPMCHANGE")
-;	return
-;}
