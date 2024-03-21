@@ -3,6 +3,7 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 CoordMode, Mouse, Client
+FormatTime, CurrentDateTime,, yyyy-MM-dd_HH-mm
 ;Variables-----------------------------------------------------------------------------------------------------------------------------------
 hotcues := [[140,130],[240,130],[340,130],[440,130],[140,175],[240,175],[340,175],[440,175]]
 colours := {red:[11,7],			dark_orange:[34,7],		orange:[55,7]
@@ -15,8 +16,11 @@ last_accessed := 0
 rec_toggle := True
 ;Auto-execute--------------------------------------------------------------------------------------------------------------------------------
 Run, "C:\Program Files\Serato\Serato DJ Pro\Serato DJ Pro.exe"
-Sleep 5000
-
+WinWait, ahk_class Qt5QWindowOwnDCIcon
+WinWaitActive, ahk_class Qt5QWindowOwnDCIcon
+MouseGetPos, PosX, PosY
+Click, 473 15
+MouseMove, %PosX%, %PosY%
 Loop ;Checks every 3 seconds if Serato process exists. If not, then script exits.
 {
 	Process, Exist, Serato DJ Pro.exe
@@ -92,6 +96,7 @@ m::
 	return
 
 ;Comfirm deletion
+!del::
 ^del::
 {
 	MsgBox, 4, Warning, Are you sure you want to delete the selected songs/crates?
@@ -105,7 +110,6 @@ m::
 ;Toggle preferred recording settings
 !r::
 {	
-	FormatTime, CurrentDateTime,, yyyy-MM-dd_HH-mm
 	sleep 1000
 	MouseGetPos, PosX, PosY 
 	
@@ -161,17 +165,17 @@ m::
 	return
 }
 
-del::
-{
-	Click
-	MouseGetPos, PosX, PosY
-	Click, 540 %PosY% 2
-	Sleep, 200
-	SendInput, Delete
-	SendInput, {Enter}
-	MouseMove, %PosX%, %PosY%
-	return
-}
+;del::
+;{
+;	Click
+;	MouseGetPos, PosX, PosY
+;	Click, 540 %PosY% 2
+;	Sleep, 200
+;	SendInput, Delete
+;	SendInput, {Enter}
+;	MouseMove, %PosX%, %PosY%
+;	return
+;}
 
 ;::bpm::BPMCHANGE
 ;Functions-----------------------------------------------------------------------------------------------------------------------------------
