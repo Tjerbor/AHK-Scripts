@@ -11,7 +11,7 @@ stage := 1
 Gui,+AlwaysOnTop
 ;Gui, SeratoPixel:New
 Gui, Font, s13
-Gui, Add, Text, , % "Hello, this will only pop once to find the places for your custom resolution.`nDelete "settings.ini" in the folder to reset the settings."
+Gui, Add, Text, , % "Hello, this will only pop once to find the places for your custom resolution.`nDelete 'settings.ini' in the folder to reset the settings."
 Gui, Add, Button, Default x10 w80, OK
 Gui, Show, AutoSize
 return
