@@ -20,6 +20,7 @@ WinWait, ahk_class Qt5QWindowOwnDCIcon
 WinWaitActive, ahk_class Qt5QWindowOwnDCIcon
 MouseGetPos, PosX, PosY
 Click, 473 15
+Click, 167 15
 MouseMove, %PosX%, %PosY%
 Loop ;Checks every 3 seconds if Serato process exists. If not, then script exits.
 {
