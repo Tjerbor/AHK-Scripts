@@ -10,11 +10,14 @@ FormatTime, CurrentDateTime,, yyyy-MM-dd_HH-mm
 hotcues := []
 colours := {}
 last_accessed := 0
+hotcue_text_offset := 0
 rec_toggle := True
 hotcuePos := []
 stage := 1
 ;Auto-execute--------------------------------------------------------------------------------------------------------------------------------
 Run, "C:\Program Files\Serato\Serato DJ Pro\Serato DJ Pro.exe"
+WinWait, ahk_class Qt5QWindowOwnDCIcon
+WinWaitActive, ahk_class Qt5QWindowOwnDCIcon
 
 Goto, init
 
@@ -25,7 +28,6 @@ if !FileExist("settings.ini")
 }
 import_settings()
 
-WinWait, ahk_class Qt5QWindowOwnDCIcon
 WinWaitActive, ahk_class Qt5QWindowOwnDCIcon
 MouseGetPos, PosX, PosY
 Click, 473 15
@@ -50,6 +52,10 @@ Loop ;Checks every 3 seconds if Serato process exists. If not, then script exits
 	return
 
 #IfWinActive ahk_class Qt5QWindowOwnDCIcon
+f1::
+	suspend
+	return
+
 ;HOT CUES
 1::
 	hotcue_exec(1)
@@ -103,6 +109,14 @@ m::
 	return
 .::
 	change_colour("purple",".")
+	return
+;Change Text of most recently used hotcue
+Space & v::
+	change_text("Vocal")
+	return
+	
+Space & b::
+	change_text("Break")
 	return
 
 ;Comfirm deletion
@@ -220,15 +234,36 @@ change_colour(colour,input)
 	return
 }
 
+change_text(text)
+{
+	global hotcues
+	global last_accessed
+	global colours
+	global hotcue_text_offset
+	MouseGetPos, PosX, PosY
+	lastX := hotcues[last_accessed].1
+	lastY := hotcues[last_accessed].2
+	offsetY := lastY - hotcue_text_offset
+	Click, %lastX% %offsetY% 2
+	sleep 20
+	SendInput % text
+	SendInput {Enter}
+	MouseMove, %PosX%, %PosY%
+	return
+}
+
 import_settings()
 {
 	global hotcues
 	global colours
+	global hotcue_text_offset
 	FileRead, settings, settings.ini
 	settings := StrSplit(settings,",")	
 	hotcue1 := [settings.1,settings.2]
 	hotcue8 := [settings.3,settings.4]
 	colour_delta := [settings.5,settings.6]
+	
+	hotcue_text_offset := Floor((hotcue8.2 - hotcue1.2) / 2)
 	
 	xhotdelta := (hotcue8.1 - hotcue1.1) / 3
 	loop, 4{
@@ -361,7 +396,7 @@ if WinActive("ahk_class Qt5QWindowOwnDCIcon"){
 	MouseGetPos, deltaX, deltaY
 	deltaX := deltaX - PosX
 	deltaY := deltaY - PosY
-	MsgBox, 4, ,% "The colour window size is [X,Y]:[" deltaX ":" deltaY "]`nThe expected ratio is " 68/86 " (68:86). The actual ratio is " deltaX/deltaY ".`nAn error 0.05 is acceptable.`nAre these values right? (Press No to retry)"
+	MsgBox, 4, ,% "The colour window size is [X,Y]:[" deltaX ":" deltaY "]`nThe expected ratio is " 68/86 " (68:86). The actual ratio is " deltaX/deltaY ".`nAn error of 0.05 is acceptable.`nAre these values right? (Press No to retry)"
 	IfMsgBox, Yes
 	{
 		hotcuePos[5] := deltaX
