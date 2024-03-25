@@ -55,6 +55,10 @@ Loop ;Checks every 3 seconds if Serato process exists. If not, then script exits
 f1::
 	suspend
 	return
+	
+!Space::
+	SendInput, !{Space}
+	return
 
 ;HOT CUES
 1::
@@ -189,17 +193,19 @@ Space & b::
 	return
 }
 
-;del::
-;{
-;	Click
-;	MouseGetPos, PosX, PosY
-;	Click, 540 %PosY% 2
-;	Sleep, 200
-;	SendInput, Delete
-;	SendInput, {Enter}
-;	MouseMove, %PosX%, %PosY%
-;	return
-;}
+del::
+{
+	Click
+	MouseGetPos, PosX, PosY
+	;Click, 540 %PosY% 2
+	SendEvent, {Click 540 %PosY%}
+	SendEvent, {Click 540 %PosY%}
+	Sleep, 200
+	SendInput, Delete
+	SendInput, {Enter}
+	MouseMove, %PosX%, %PosY%
+	return
+}
 
 ;::bpm::BPMCHANGE
 ;Functions-----------------------------------------------------------------------------------------------------------------------------------
