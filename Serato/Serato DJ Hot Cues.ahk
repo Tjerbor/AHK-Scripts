@@ -114,6 +114,7 @@ m::
 .::
 	change_colour("purple",".")
 	return
+	
 ;Change Text of most recently used hotcue
 Space & v::
 	change_text("Vocal")
@@ -121,6 +122,44 @@ Space & v::
 	
 Space & b::
 	change_text("Break")
+	return
+	
+; 3 Beat Loop
+!L::
+	SetKeyDelay, 100, 100
+	MouseGetPos, PosX, PosY
+	Loop, 7
+	{
+		SendEvent {Click 760 157}
+	}
+	Loop, 2
+	{
+		SendEvent {Click 502 157}
+	}
+	SendEvent {Click 75 172}
+	SendEvent {Click 543 157}
+	SendEvent {Click 253 109}
+	SendEvent {O}
+	Loop, 3
+	{
+		SendEvent {Click 702 176}
+	}
+	SendEvent {P}
+	SendEvent {Click 253 109}
+	sleep 10
+	SendEvent {Click 253 109}
+	SendInput, 3 Beat Loop
+	sleep 20
+	SendInput {Enter}
+	SendEvent {Click 443 110}
+	SendEvent {Click 75 110}
+	Loop, 2
+	{
+		SendEvent {Click 760 157}
+	}
+	SendEvent {Click 720 157}
+	MouseMove, %PosX%, %PosY%
+	SetKeyDelay, -1, -1 , -1
 	return
 
 ;Comfirm deletion

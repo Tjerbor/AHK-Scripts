@@ -86,14 +86,11 @@ Numpad1::
 ;Functions-----------------------------------------------------------------------------------------------------------------------------------
 hotcue_exec(input)
 {
-	global hotcues
 	global last_accessed
 	SendInput, {%input% down}
     Sleep, 50
     SendInput, {%input% up}
 	last_accessed := input
-	X := hotcues[input].1
-	Y := hotcues[input].2
 	return
 }
 
@@ -111,7 +108,9 @@ change_colour(colour)
 	sleep 150
 	MouseMove, %offsetX%, %offsetY%
 	sleep 150
-	SendEvent {Click}{Click}{Click}
+	SendEvent {Click down}
+	sleep 150
+	SendEvent {Click up}
 	MouseMove, %PosX%, %PosY%
 	return
 }
