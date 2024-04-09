@@ -29,17 +29,9 @@ import_settings()
 
 WinWaitActive, ahk_exe rekordbox.exe
 
-Loop ;Checks every 3 seconds if Rekordbox process exists. If not, then script exits.
-{
-	Process, Exist, rekordbox.exe
-	{
-		If ! ErrorLevel
-		{
-			ExitApp
-		}
-	}
-	Sleep 3000
-}
+
+WinWaitClose, ahk_exe rekordbox.exe
+Exitapp
 ;Hotkeys-------------------------------------------------------------------------------------------------------------------------------------
 
 ;Exit Script

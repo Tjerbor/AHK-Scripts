@@ -5,18 +5,9 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 #SingleInstance force
 CoordMode, Mouse, Screen
-	
-Loop
-{
-	Process, Exist, FL64.exe
-	{
-		If ! ErrorLevel
-		{
-			ExitApp
-		}
-	}
-	Sleep 3000
-}
+
+WinWaitClose, ahk_exe FL64.exe
+Exitapp
 
 #IfWinActive ahk_class TFruityLoopsMainForm
 Numpad8::

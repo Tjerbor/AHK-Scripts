@@ -6,6 +6,17 @@ CoordMode, Mouse, Client
 #SingleInstance force
 
 Run, "C:\Program Files (x86)\Steam\steam.exe" -applaunch 2330500
+Goto, Closing
+
+Closing:
+WinWaitClose, ahk_exe BetonBrutal.exe
+sleep 30000
+if WinExist("ahk_exe BetonBrutal.exe")
+{
+	Goto, Closing
+}
+Exitapp
+return
 
 ^Esc::
 	exitapp

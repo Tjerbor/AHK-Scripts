@@ -14,6 +14,9 @@ SendEvent, {LWin down}{Up down}
 sleep 20
 SendEvent, {LWin up}{Up up}
 
+WinWaitClose, ahk_exe onetagger.exe
+Exitapp
+
 #IfWinActive ahk_exe onetagger.exe
 ^RButton Up::
 	SendInput, {Esc}

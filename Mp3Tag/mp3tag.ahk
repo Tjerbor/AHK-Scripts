@@ -5,6 +5,9 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 #SingleInstance Force
 
+WinWaitClose, ahk_exe Mp3tag.exe
+Exitapp
+
 #IfWinActive ahk_exe Mp3tag.exe
 ^e::
 	SendEvent, Extended Mix
