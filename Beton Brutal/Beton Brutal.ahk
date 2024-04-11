@@ -27,9 +27,15 @@ g::
 	RunWait, "cmd.exe" start cmd.exe @cmd /k taskkill /im BetonBrutal.exe /f && "C:\Program Files (x86)\Steam\steam.exe" -applaunch 2330500 && exit
 	While not WinExist("ahk_exe BetonBrutal.exe")
 	{
-		if WinExist("ahk_exe steamwebhelper.exe")
+		if WinExist("Steam Dialog")
 		{
-			WinActivate, ahk_exe steamwebhelper.exe
+			WinActivate, Steam Dialog
+			WinWaitActive, Steam Dialog
+			WinGetActiveStats, OutTitle, OutWidth, OutHeight, OutX, OutY
+			if ( Abs((648 / 287) - (OutWidth / OutHeight)) > 0.1)
+			{
+				break
+			}
 			Click, 430 245
 		}
 		sleep 200
