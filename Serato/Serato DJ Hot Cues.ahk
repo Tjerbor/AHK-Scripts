@@ -4,6 +4,7 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 CoordMode, Mouse, Client
+CoordMode, Pixel, Client
 FormatTime, CurrentDateTime,, yyyy-MM-dd_HH-mm
 
 ;Variables-----------------------------------------------------------------------------------------------------------------------------------
@@ -14,6 +15,22 @@ hotcue_text_offset := 0
 rec_toggle := True
 hotcuePos := []
 stage := 1
+
+Quantize := [167, 15]
+EQ := [473, 15]
+
+;Record Settings
+RecBtn := [320, 15]
+RecName := [1177, 420]
+RecSave := [1330, 420]
+Settings := [1745, 15]
+DJ_perferences := [800, 55]
+lock_playing_deck := [710, 135]
+stop_time_on := [1140, 210, 1140, 178]
+stop_time_off := [1140, 210, 1140, 420]
+library_display := [940, 55]
+one_decimal := [1077, 276]
+two_decimal := [1077, 297]
 ;Auto-execute--------------------------------------------------------------------------------------------------------------------------------
 Run, "C:\Program Files\Serato\Serato DJ Pro\Serato DJ Pro.exe"
 WinWait, ahk_class Qt5QWindowOwnDCIcon
@@ -29,9 +46,16 @@ if !FileExist("settings.ini")
 import_settings()
 
 WinWaitActive, ahk_class Qt5QWindowOwnDCIcon
+WinActivate, ahk_class Qt5QWindowOwnDCIcon
 MouseGetPos, PosX, PosY
-Click, 473 15
-Click, 167 15
+if (check_for_colour(EQ.1, EQ.2,"0x0067A9", 7, 3))
+{
+	Click % EQ.1 " " EQ.2
+}
+if (not check_for_colour(Quantize.1, Quantize.2,"0x0067A9", 7, 3))
+{
+	Click % Quantize.1 " " Quantize.2
+}
 MouseMove, %PosX%, %PosY%
 
 ;If Serato is closed, script exits.
@@ -109,6 +133,10 @@ m::
 	return
 	
 ;Change Text of most recently used hotcue
+Space & c::
+	change_text("4 Bars")
+	return
+
 Space & v::
 	change_text("Vocal")
 	return
@@ -169,55 +197,79 @@ Space & b::
 
 ;Toggle preferred recording settings
 !r::
-{	
-	sleep 1000
-	MouseGetPos, PosX, PosY 
-	
-	if(rec_toggle) ;rec
+{	MouseGetPos, PosX, PosY 
+	if (check_for_colour(Settings.1, Settings.2,"0x0067A9", 7, 3))
 	{
-		Click, 320, 15
-		sleep 1000
-		Click, 1177 420 2	
+		Click % Settings.1 " " Settings.2 ;settings
+		sleep 500
+	}
+	
+	if(rec_toggle) ;Turn Recording Settings on
+	{
+		if (not check_for_colour(RecBtn.1, RecBtn.2,"0x0067A9", 7, 3))
+		{
+			Click % RecBtn.1 " " RecBtn.2
+			sleep 1000
+		}
+		Click % RecName.1 " " RecName.2 " " 2
 		SendInput %CurrentDateTime%
 		SendInput {Esc}
-	}
-	else
-	{
-		Click, 1330 420
-		sleep 350
-		Click, 320, 15 ;rec
-	}
-	sleep 80
+		
+		sleep 80
 	
-	Click, 1745 15 ;settings
-	sleep 80
+		Click % Settings.1 " " Settings.2 ;settings
+		sleep 80
+		
+		Click % DJ_perferences.1 " " DJ_perferences.2 ;dj perferences
+		sleep 80
+		if (not check_for_colour(lock_playing_deck.1, lock_playing_deck.2,"0x000000", 5, 0))
+		{
+			Click % lock_playing_deck.1 " " lock_playing_deck.2 ;lock playing deck
+			sleep 80
+		}
+		
+		SendEvent % "{Click " stop_time_off.1 " " stop_time_off.2 " Down}{Click " stop_time_off.3 " " stop_time_off.4 " Up}"
+		SendEvent % "{Click " stop_time_on.1 " " stop_time_on.2 " Down}{Click " stop_time_on.3 " " stop_time_on.4 " Up}"
+		sleep 80
+		
+		Click % library_display.1 " " library_display.2 ;library + display
+		sleep 80
+		
+		Click % one_decimal.1 " " one_decimal.2 ;deck bpm display
+	}
+	;------------------------------------------
+	else ;Turn Recording Settings off
+	{
+		if (check_for_colour(RecBtn.1, RecBtn.2,"0x0067A9", 7, 3))
+		{
+			Click % RecSave.1 " " RecSave.2
+			sleep 350
+			Click % RecBtn.1 " " RecBtn.2
+			sleep 80
+		}
 	
-	Click, 800 55 ;dj perferences
-	sleep 80
-	Click, 710 135 ;lock playing deck
-	sleep 80
-	if(rec_toggle) ;stop time
-	{
-		SendEvent {Click 1140 210 Down}{Click 1140 178 Up}
+		Click % Settings.1 " " Settings.2 ;settings
+		sleep 80
+		
+		Click % DJ_perferences.1 " " DJ_perferences.2 ;dj perferences
+		sleep 80
+		if (check_for_colour(lock_playing_deck.1, lock_playing_deck.2,"0x000000", 5, 0))
+		{
+			Click % lock_playing_deck.1 " " lock_playing_deck.2 ;lock playing deck
+			sleep 80
+		}
+		
+		SendEvent % "{Click " stop_time_off.1 " " stop_time_off.2 " Down}{Click " stop_time_off.3 " " stop_time_off.4 " Up}"
+		sleep 80
+		
+		Click % library_display.1 " " library_display.2
+		sleep 80
+		
+		Click % two_decimal.1 " " two_decimal.2 ;deck bpm display
 	}
-	else
-	{
-		SendEvent {Click 1140 210 Down}{Click 1140 300 Up}
-	}
-	sleep 80
 	
-	Click, 940 55 ;library + display
 	sleep 80
-	if(rec_toggle) ;deck bpm display
-	{
-		Click, 1077, 276
-	}
-	else
-	{
-		Click, 1077, 297
-	}
-	sleep 80
-	Click, 1745 15 ;exit settings
+	Click % Settings.1 " " Settings.2 ;exit settings
 	sleep 80
 	
 	MouseMove, %PosX%, %PosY%
@@ -288,6 +340,16 @@ change_text(text)
 	SendInput {Enter}
 	MouseMove, %PosX%, %PosY%
 	return
+}
+
+check_for_colour(X,Y,colour,width,error_margin)
+{
+	PixelSearch, Px, Py, % X - width, % Y - width, % X + width, % Y + width, %colour%, %error_margin%, Fast RGB
+	if ErrorLevel
+	{
+		return false
+	}
+	return true
 }
 
 import_settings()
