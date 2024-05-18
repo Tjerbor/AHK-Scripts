@@ -45,8 +45,25 @@ if !FileExist("settings.ini")
 }
 import_settings()
 
+Loop, 5
+{
+	if WinActive(ahk_class Qt5QWindowOwnDCIcon)
+	{	
+		MouseGetPos, PosX, PosY
+		if (check_for_colour(EQ.1, EQ.2,"0x0067A9", 7, 3))
+		{
+			Click % EQ.1 " " EQ.2
+		}
+		if (not check_for_colour(Quantize.1, Quantize.2,"0x0067A9", 7, 3))
+		{
+			Click % Quantize.1 " " Quantize.2
+		}
+		MouseMove, %PosX%, %PosY%
+	}
+	sleep 3000
+}
+
 WinWaitActive, ahk_class Qt5QWindowOwnDCIcon
-WinActivate, ahk_class Qt5QWindowOwnDCIcon
 MouseGetPos, PosX, PosY
 if (check_for_colour(EQ.1, EQ.2,"0x0067A9", 7, 3))
 {
@@ -76,6 +93,11 @@ f1::
 !Space::
 	SendInput, !{Space}
 	return
+
+^g::
+	SendEvent % "{Click " RecBtn.1 " " RecBtn.2 " Down}{Click " RecBtn.1 " " RecBtn.2 " Up}"
+	return
+
 
 ;HOT CUES
 1::
@@ -208,7 +230,7 @@ Space & b::
 	{
 		if (not check_for_colour(RecBtn.1, RecBtn.2,"0x0067A9", 7, 3))
 		{
-			Click % RecBtn.1 " " RecBtn.2
+			SendEvent % "{Click " RecBtn.1 " " RecBtn.2 " Down}{Click " RecBtn.1 " " RecBtn.2 " Up}"
 			sleep 1000
 		}
 		Click % RecName.1 " " RecName.2 " " 2
@@ -244,7 +266,7 @@ Space & b::
 		{
 			Click % RecSave.1 " " RecSave.2
 			sleep 350
-			Click % RecBtn.1 " " RecBtn.2
+			SendEvent % "{Click " RecBtn.1 " " RecBtn.2 " Down}{Click " RecBtn.1 " " RecBtn.2 " Up}"
 			sleep 80
 		}
 	
