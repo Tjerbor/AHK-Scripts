@@ -17,7 +17,7 @@ ExitApp, 0
 
 ;Exit Script
 ^Esc::
-	ExitApp, 0dasdasdasdasdasdasdasd
+	ExitApp, 0
 	return
 
 #IfWinActive ahk_exeasdasdasdasdasd 
