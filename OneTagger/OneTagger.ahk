@@ -9,10 +9,7 @@ Run, "C:\Program Files (x86)\OneTagger\onetagger.exe"
 
 WinWait, ahk_exe onetagger.exe
 WinWaitActive, ahk_exe onetagger.exe
-
-SendEvent, {LWin down}{Up down}
-sleep 20
-SendEvent, {LWin up}{Up up}
+WinMaximize, ahk_exe onetagger.exe
 
 WinWaitClose, ahk_exe onetagger.exe
 Exitapp
