@@ -50,7 +50,7 @@ ExitApp, 0
 		clicked := true
 		MouseMove, %FoundX%, %FoundY%
 		Click
-		Sleep, 550
+		Sleep, 750
 		ImageSearch, FoundX, FoundY, 0, 0, W, H, click1.png
 		MouseMove % FoundX + 10 , FoundY - 5
 		Click
