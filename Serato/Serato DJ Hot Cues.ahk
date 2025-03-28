@@ -15,6 +15,7 @@ hotcue_text_offset := 0
 rec_toggle := True
 hotcuePos := []
 stage := 1
+the_sound := False
 
 Quantize := [167, 15]
 EQ := [473, 15]
@@ -88,6 +89,15 @@ Exitapp
 #IfWinActive ahk_class Qt5QWindowOwnDCIcon
 f1::
 	suspend
+	the_sound := not the_sound
+	if(the_sound) 	;Pause
+	{
+		Soundplay, %A_WorkingDir%\KERO_Impulse.mp3
+	}
+	else			;ENGANE
+	{
+		Soundplay, %A_WorkingDir%\KERO_Yoink.mp3
+	}
 	return
 	
 !Space::
@@ -319,7 +329,7 @@ hotcue_exec(input)
 {
 	global hotcues
 	global last_accessed
-	SendInput, %input%
+	;SendInput, %input%
 	last_accessed := input
 	MouseGetPos, PosX, PosY
 	X := hotcues[input].1
@@ -342,7 +352,7 @@ change_colour(colour,input)
 	Click, %lastX% %lastY% right
 	Click, %offsetX% %offsetY%
 	MouseMove, %PosX%, %PosY%
-	SendInput, %input%
+	;SendInput, %input%
 	return
 }
 
