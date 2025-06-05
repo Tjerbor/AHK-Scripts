@@ -29,10 +29,10 @@
 		FiletypeObjectArray := [] ;Array needs to be initiated first to work.
 		PushFiletypeToArray(FiletypeObjectArray,["zip","7z","rar","r00","001"], "Compressed")
 		PushFiletypeToArray(FiletypeObjectArray,["jpg","jp2","bmp","gif","gifv","png","jpeg","swf","tga","tiff","exr","psd","webp","ico","svg"], "Images")
-		PushFiletypeToArray(FiletypeObjectArray,["txt","nfo","rtf","pdf","docx","doc","pptx","flp","fst","ttf","sav","ini","html","acsm","fxp","epub","mobi","azw","azw3","cbr","cbz","otf","fb2k-component","htm","rss","pd","bundle","xlsx","json","nmsv","phaseplant","url"], "Documents")
+		PushFiletypeToArray(FiletypeObjectArray,["txt","nfo","rtf","pdf","docx","doc","pptx","flp","fst","ttf","sav","ini","html","acsm","fxp","epub","mobi","azw","azw3","cbr","cbz","otf","fb2k-component","htm","rss","pd","bundle","xlsx","json","nmsv","phaseplant","url","src"], "Documents")
 		PushFiletypeToArray(FiletypeObjectArray,["mp3","flac","wav","zpa","m4a","aif","aiff","aac","ogg","opus","m3u","m3u8","mid"], "Audio")
 		PushFiletypeToArray(FiletypeObjectArray,["avi","mpg","mpeg","mov","mp4","mkv","wmv","webm"], "Videos")
-		PushFiletypeToArray(FiletypeObjectArray,["exe","msi","jar","cmd","bat","ahk"], "Programs")
+		PushFiletypeToArray(FiletypeObjectArray,["exe","msi","jar","cmd","bat","ahk","c"], "Programs")
 		PushFiletypeToArray(FiletypeObjectArray,["torrent"], "Torrents")
 
 ;---------------------------------------------------------------------------------------------------------------------------------------;

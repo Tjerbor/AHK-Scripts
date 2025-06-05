@@ -323,6 +323,65 @@ del::
 	return
 }
 
+;round BPM values
+^b::
+{
+	ImageSearch, FoundX, FoundY, 0, 0, A_ScreenWidth, A_ScreenHeight, bpm_column.png
+	if (ErrorLevel = 0)
+	{
+		newClickX := FoundX + 20
+		newClickY := FoundY + 35
+		
+		SendEvent, {Click %newClickX% %newClickY% down}{Click %newClickX% %newClickY% up}
+		sleep 50
+		SendEvent, {up}
+		sleep 50
+		SendEvent, {down}
+		sleep 50
+		SendEvent, {up}
+		sleep 50
+		
+		searchX1 := FoundX - 20
+		searchY1 := FoundY
+		searchX2 := newClickX
+		searchY2 := A_ScreenHeight
+		
+		While (True){
+			ImageSearch, FoundX, FoundY, searchX1, searchY1, searchX2, searchY2, bpm_column_left_border.png
+			if (ErrorLevel = 0)
+			{
+				newClickX := FoundX + 10
+				newClickY := FoundY + 30
+				Click, %newClickX% %newClickY% 2
+				sleep 300
+				clipboard := ""
+				SendEvent ^c
+				ClipWait
+				unrounded_bpm := clipboard
+				rounded_bpm := Round(unrounded_bpm)
+				if (unrounded_bpm - rounded_bpm != 0.0)
+				{
+					clipboard := rounded_bpm
+					SendEvent ^v
+					sleep 100
+					SendEvent .00{Enter}
+					sleep 300
+					SendEvent {Enter}
+					sleep 300				
+				}
+				else
+				{
+					SendEvent {Escape}
+					Sleep 300
+				}
+				SendEvent, {down}
+				sleep 100
+			}
+		}
+	}
+	return
+}
+
 ;::bpm::BPMCHANGE
 ;Functions-----------------------------------------------------------------------------------------------------------------------------------
 hotcue_exec(input)
