@@ -134,7 +134,7 @@
 					SetTimer, RemoveToolTip, 3000
 				}
 				MakeFolderIfNotExist(UnzipTo . "\" . FileName)
-				Runwait, "%7ZipLocation%" x "%FullPath%" -o"%UnzipTo%\%FileName%"
+				;;;Runwait, "%7ZipLocation%" x "%FullPath%" -o"%UnzipTo%\%FileName%"
 			sleep,2000
 			
 			IfExist %UnzipTo%\%FileName%
