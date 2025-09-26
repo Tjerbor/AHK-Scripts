@@ -136,7 +136,7 @@ f1::
 	return
 
 ;Change colour of most recently used hotcue
-y::
+z::
 	change_colour("dark_green","y")
 	return
 x::
