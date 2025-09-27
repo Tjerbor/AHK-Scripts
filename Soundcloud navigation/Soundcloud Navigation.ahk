@@ -31,7 +31,7 @@ f1::
 #IfWinActive ahk_exe firefox.exe
 
 	;playback
-	z::
+	z:: ;previous
 		{
 			if(toggle)
 			{
@@ -44,11 +44,16 @@ f1::
 
 			Return
 		}
-	x::
+	x:: ;open in new tab
 		{
 			if(toggle)
 			{
-				SendInput, {Left}
+				MouseGetPos, xpos, ypos
+				MouseMove, 1280, 1025
+				SendInput, {Ctrl Down}
+				Click
+				SendInput, {Ctrl Up}
+				MouseMove, %xpos%, %ypos%
 			}
 			else
 			{
@@ -56,11 +61,11 @@ f1::
 			}
 			Return
 		}
-	c::
+	c:: ;repost
 		{
 			if(toggle)
 			{
-				SendInput, {Right}
+				SendInput, r
 			}
 			else
 			{
@@ -68,7 +73,7 @@ f1::
 			}
 			Return
 		}
-	v::
+	v:: ;like
 		{
 			if(toggle)
 			{
@@ -80,7 +85,7 @@ f1::
 			}
 			Return
 		}
-	b::
+	b:: ;next
 		{
 			if(toggle)
 			{
@@ -93,6 +98,56 @@ f1::
 			Return
 		}
 
+	n:: ;copy current playback title
+		{
+			if(toggle)
+			{
+				clipboard := ""
+				MouseGetPos, xpos, ypos
+				MouseMove, 1270, 1025
+				SendInput, {LButton down}
+				MouseMove, 1455, 1030
+				SendInput, {LButton Up}
+				SendInput, {Ctrl Down}c{Ctrl up}
+				ClipWait
+				MouseMove, 30, 1025
+				Click
+				MouseMove, %xpos%, %ypos%
+				Clipboard := StrReplace(Clipboard, "`r`n")
+			}
+			else
+			{
+				SendInput, n
+			}
+			Return
+		}
+
+	d:: ;create and add to dll playlist
+		{
+			if(toggle)
+			{
+				Create_add_to_playlist("dll.png","dll")
+			}
+			else
+			{
+				SendInput, d
+			}
+			Return
+		}
+	f:: ;create and add to dll playlist
+		{
+			if(toggle)
+			{
+				Create_add_to_playlist("djonly.png","djonly")
+			}
+			else
+			{
+				SendInput, f
+			}
+			Return
+		}
+
+	;playback: numpad seek
 	Numpad0::
 	NumpadIns::
 		{
@@ -145,10 +200,81 @@ f1::
 			Return
 		}
 
-;playback: numpad seek
+		;Functions------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-;open current song in new tab
-;copy current playback title
-;add to dll or djonly list
+		Create_add_to_playlist(playlist_image, playlist_name)
+		{
+			;open new tab and switch to it
+			MouseGetPos, xpos, ypos
+			MouseMove, 1280, 1025
+			SendInput, {Ctrl Down}
+			Click
+			SendInput, {Ctrl Up}
+			Sleep, 100
+			SendInput, {Ctrl Down}{Tab}{Ctrl up}
 
-;Functions------------------------------------------------------------------------------------------------------------------------------------------------------------
+			;search for three dots
+			Loop, 7
+			{
+				Sleep, 1000
+				ImageSearch, FoundX, FoundY, 340, 160, 1200, 850, dots.png
+				if (ErrorLevel = 1 and %A_Index% = 7) ;not found
+				{
+					SendInput, {Ctrl Down}w{Ctrl up}
+					MsgBox Coult not find 3 dots.
+					Return
+				}
+				else if(ErrorLevel = 1) ; not found yet
+				{
+					continue
+				}
+				else ; found the 3 dots
+				{
+					break
+				}
+			}
+			MouseMove % FoundX + 25, FoundY + 20
+			Click
+			sleep, 50
+			MouseMove % FoundX + 25, FoundY + 60
+			Click
+			sleep, 50
+
+			;search for playlist
+			index := 0
+			While(index < 3)
+			{
+				index := index + 1
+				ImageSearch, FoundX, FoundY, 680, 190, 1320, 900, %playlist_image%
+				if (ErrorLevel = 1 and index = 3) ;playlist image not found
+				{
+					;create the playlist
+					MouseMove, 1050, 230
+					Click
+					sleep 150
+					Click, 720, 320
+					clipboard := playlist_name
+					SendInput {Ctrl Down}v{Ctrl up}{Enter}
+					Sleep, 1000
+					SendInput, {Ctrl Down}w{Ctrl up}
+					return
+				}
+				else if(ErrorLevel = 1) ; not found yet
+				{
+					Sleep, 1000
+					continue
+				}
+				else ; found the 3 dots
+				{
+
+					MouseMove % 1130, FoundY + 20
+					Click
+					sleep, 50
+					SendInput, {Ctrl Down}w{Ctrl up}
+					break
+				}
+			}
+
+			MouseMove, %xpos%, %ypos%
+			Return
+		}
