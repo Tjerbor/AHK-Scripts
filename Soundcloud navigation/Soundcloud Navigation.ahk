@@ -147,6 +147,24 @@ f1::
 			Return
 		}
 
+	;volume control
+	RButton & WheelUp::
+		{
+			if(toggle)
+			{
+				SendInput, {shift down}{Up}{Shift up}
+			}
+			Return
+		}
+	RButton & WheelDown::
+		{
+			if(toggle)
+			{
+				SendInput, {shift down}{Down}{Shift up}
+			}
+			Return
+		}
+
 	;playback: numpad seek
 	Numpad0::
 	NumpadIns::
