@@ -8,6 +8,7 @@ CoordMode, Pixel, Client
 
 ;Variables------------------------------------------------------------------------------------------------------------------------------------------------------------
 toggle := True
+the_sound := False
 ;Auto-execute---------------------------------------------------------------------------------------------------------------------------------------------------------
 WinWaitClose, ahk_exe firefox.exe
 ExitApp, 0
@@ -19,14 +20,27 @@ ExitApp, 0
 		ExitApp, 0
 		return
 	}
-f1::
+
+#IfWinActive ahk_exe firefox.exe
+	;toggle/suspend
+	f1::
 	{
 		;normal suspend doesn't work with firefox
 		toggle := !toggle
+		
+		;Sound Cue
+		the_sound := not the_sound
+		if(the_sound) 	;Pause
+		{
+			Soundplay, %A_WorkingDir%\KERO_Impulse.mp3
+		}
+		else			;ENGANE
+		{
+			Soundplay, %A_WorkingDir%\KERO_Yoink.mp3
+		}
+		
 		return
 	}
-
-#IfWinActive ahk_exe firefox.exe
 
 	;playback
 	z:: ;previous
@@ -220,6 +234,7 @@ f1::
 
 		Create_add_to_playlist(playlist_image, playlist_name)
 		{
+			Soundplay, %A_WorkingDir%\%playlist_name%.mp3
 			;open new tab and switch to it
 			MouseGetPos, xpos, ypos
 			MouseMove, 1280, 1025
