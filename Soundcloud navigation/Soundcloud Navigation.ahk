@@ -160,6 +160,11 @@ ExitApp, 0
 		}
 
 	;volume control
+	RButton::
+	{
+		SendInput, {RButton}
+		return
+	}
 	RButton & WheelUp::
 		{
 			if(toggle)
