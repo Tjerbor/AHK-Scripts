@@ -50,13 +50,18 @@ ExitApp, 0
 		clicked := true
 		MouseMove, %FoundX%, %FoundY%
 		Click
-		Sleep, 750
-		ImageSearch, FoundX, FoundY, 0, 0, W, H, click1.png
-		MouseMove % FoundX + 10 , FoundY - 5
-		Click
+		Sleep, 1000
+		;ImageSearch, FoundX, FoundY, 0, 0, W, H, click1.png
+		;MouseMove % FoundX + 10 , FoundY - 5
+		;Click
+		;Sleep, 250
+		SendInput,{Tab}{Tab}{Tab}{Tab}{Tab}
+		Sleep, 50
+		SendInput, {Enter}
 		Sleep, 250
-	}	
-	
+	}
+
+	return	
 }
 
 ^O::
@@ -83,7 +88,7 @@ ExitApp, 0
 		Click
 		Sleep, 250
 	}	
-	
+	return
 }
 
 ;Functions------------------------------------------------------------------------------------------------------------------------------------------------------------
