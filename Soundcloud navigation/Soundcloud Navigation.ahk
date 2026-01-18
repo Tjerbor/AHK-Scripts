@@ -61,7 +61,7 @@ ExitApp, 0
 			if(toggle)
 			{
 				MouseGetPos, xpos, ypos
-				MouseMove, 1280, 1025
+				MouseMove, 1300, 1020
 				SendInput, {Ctrl Down}
 				Click
 				SendInput, {Ctrl Up}
@@ -242,7 +242,7 @@ ExitApp, 0
 			Soundplay, %A_WorkingDir%\%playlist_name%.mp3
 			;open new tab and switch to it
 			MouseGetPos, xpos, ypos
-			MouseMove, 1280, 1025
+			MouseMove, 1300, 1020
 			SendInput, {Ctrl Down}
 			Click
 			SendInput, {Ctrl Up}
