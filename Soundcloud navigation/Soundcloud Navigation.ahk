@@ -24,23 +24,23 @@ ExitApp, 0
 #IfWinActive ahk_exe firefox.exe
 	;toggle/suspend
 	f1::
-	{
-		;normal suspend doesn't work with firefox
-		toggle := !toggle
-		
-		;Sound Cue
-		the_sound := not the_sound
-		if(the_sound) 	;Pause
 		{
-			Soundplay, %A_WorkingDir%\KERO_Impulse.mp3
+			;normal suspend doesn't work with firefox
+			toggle := !toggle
+
+			;Sound Cue
+			the_sound := not the_sound
+			if(the_sound) 	;Pause
+			{
+				Soundplay, %A_WorkingDir%\KERO_Impulse.mp3
+			}
+			else			;ENGANE
+			{
+				Soundplay, %A_WorkingDir%\KERO_Yoink.mp3
+			}
+
+			return
 		}
-		else			;ENGANE
-		{
-			Soundplay, %A_WorkingDir%\KERO_Yoink.mp3
-		}
-		
-		return
-	}
 
 	;playback
 	z:: ;previous
@@ -133,7 +133,55 @@ ExitApp, 0
 			}
 			Return
 		}
+	a:: ;open current website in waterfox
+		{
+			if(toggle)
+			{
+				SendInput, {CtrlDown}l{CtrlUp}
+				SendInput, {CtrlDown}c{CtrlUp}
+				Run, "C:\Program Files\Waterfox\waterfox.exe" %clipboard%
+			}
+			else
+			{
+				SendInput, a
+			}
+			Return
+		}
+	s:: ;open current playing track in waterfox
+		{
+			if(toggle)
+			{
+				;open new tab and switch to it
+				MouseGetPos, xpos, ypos
+				MouseMove, 1300, 1020
+				Click, Right
+				sleep, 50
+				SendInput, k
+				sleep, 50
+				SendInput, {Enter}
+				sleep, 50
 
+				; SendInput, {Ctrl Down}
+				; Click
+				; SendInput, {Ctrl Up}
+				; Sleep, 100
+				; SendInput, {Ctrl Down}{Tab}{Ctrl up}
+				; Sleep, 100
+
+				; SendInput, {CtrlDown}l{CtrlUp}
+				; SendInput, {CtrlDown}c{CtrlUp}
+				; sleep, 50
+				; SendInput, {Ctrl Down}w{Ctrl up}
+				MouseMove, %xpos%, %ypos%
+
+				Run, "C:\Program Files\Waterfox\waterfox.exe" %clipboard%
+			}
+			else
+			{
+				SendInput, s
+			}
+			Return
+		}
 	d:: ;create and add to dll playlist
 		{
 			if(toggle)
@@ -161,10 +209,10 @@ ExitApp, 0
 
 	;volume control
 	RButton::
-	{
-		SendInput, {RButton}
-		return
-	}
+		{
+			SendInput, {RButton}
+			return
+		}
 	RButton & WheelUp::
 		{
 			if(toggle)
