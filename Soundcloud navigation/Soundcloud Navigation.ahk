@@ -8,8 +8,10 @@ CoordMode, Pixel, Client
 
 ;Variables------------------------------------------------------------------------------------------------------------------------------------------------------------
 toggle := True
+space_toggle := False
 the_sound := False
 ;Auto-execute---------------------------------------------------------------------------------------------------------------------------------------------------------
+
 WinWaitClose, ahk_exe firefox.exe
 ExitApp, 0
 ;Hotkeys--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -27,6 +29,10 @@ ExitApp, 0
 		{
 			;normal suspend doesn't work with firefox
 			toggle := !toggle
+			
+			if(!toggle){
+				space_toggle := False
+			}
 
 			;Sound Cue
 			the_sound := not the_sound
@@ -138,7 +144,9 @@ ExitApp, 0
 			if(toggle)
 			{
 				SendInput, {CtrlDown}l{CtrlUp}
+				sleep, 100
 				SendInput, {CtrlDown}c{CtrlUp}
+				sleep, 100
 				Run, "C:\Program Files\Waterfox\waterfox.exe" %clipboard%
 			}
 			else
@@ -155,11 +163,11 @@ ExitApp, 0
 				MouseGetPos, xpos, ypos
 				MouseMove, 1300, 1020
 				Click, Right
-				sleep, 50
+				sleep, 100
 				SendInput, k
-				sleep, 50
+				sleep, 100
 				SendInput, {Enter}
-				sleep, 50
+				sleep, 100
 
 				; SendInput, {Ctrl Down}
 				; Click
@@ -229,6 +237,25 @@ ExitApp, 0
 			}
 			Return
 		}
+	
+	^j::
+	{
+		space_toggle := !space_toggle
+		return
+	}
+	
+	^k::
+	{
+		while(space_toggle){
+			if(space_toggle){
+				SendInput, {Space}
+				Sleep, 20
+				SendInput, {Space}
+			}
+			Sleep, 1500
+		}
+	}
+		
 
 	;playback: numpad seek
 	Numpad0::
@@ -353,7 +380,7 @@ ExitApp, 0
 
 					MouseMove % 1130, FoundY + 20
 					Click
-					sleep, 50
+					sleep, 750
 					SendInput, {Ctrl Down}w{Ctrl up}
 					break
 				}
